@@ -505,7 +505,7 @@ const MODELS = {
     cls: 'gemini',
     keyId: 'keyGemini',
     storageKey: 'rt_key_gemini',
-    model: 'gemini-1.5-flash-latest',
+    model: 'gemini-pro',
   },
 };
 
@@ -733,7 +733,7 @@ async function callGemini(messages, system, wordLimit) {
   }));
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${keys.gemini}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${keys.gemini}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
