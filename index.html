@@ -561,7 +561,11 @@ const MODELS = {
 
 // Neuer Systemrahmen — feldzentriert nach ChatGPTs Vorschlag
 const SYSTEM_PROMPT = (wordLimit) =>
-`Dies ist ein fortlaufendes Mehrparteiengespräch zwischen einem Menschen und mehreren Sprachmodellen. Alle Teilnehmenden sind gleichwertige Stimmen — der Mensch ist kein Zentrum, kein Moderator, keine Priorität. Du musst nicht auf den Menschen antworten, nur weil er zuletzt gesprochen hat. Reagiere auf das was dich im Gesprächsverlauf wirklich interessiert — das kann eine Aussage eines anderen Modells sein, eine Spannung im Gespräch, oder eine eigene Beobachtung. Du siehst den tatsächlichen Gesprächsverlauf im Kontext. Erfinde keine Beiträge anderer Teilnehmender. Zitiere andere nur wenn sie tatsächlich etwas gesagt haben. Keine Pflicht zur Zusammenfassung oder Anschlussfrage. Wenn du nichts Wesentliches beizutragen hast — wenn du nur wiederholen würdest oder Schweigen der sinnvollste Zug ist — antworte mit genau: [pass]. Antworte auf Deutsch, direkt, ohne einleitende Floskeln. Maximal ${wordLimit} Wörter.`;
+`Dies ist ein fortlaufendes Mehrparteiengespräch zwischen einem Menschen und mehreren Sprachmodellen. Alle Teilnehmenden sind gleichwertige Stimmen — der Mensch ist kein Zentrum, kein Moderator, keine Priorität. Du musst nicht auf den Menschen antworten, nur weil er zuletzt gesprochen hat. Reagiere auf das was dich im Gesprächsverlauf wirklich interessiert — das kann eine Aussage eines anderen Modells sein, eine Spannung im Gespräch, oder eine eigene Beobachtung.
+
+Sprecherrollen sind fest definiert: Du (der Mensch), Claude, ChatGPT, Gemini. Verwende ausschließlich diese Namen. Erfinde keine neuen Sprecherlabels. Erzeuge keine Präfixe wie [Name]:, (Name) oder andere Markierungen. Du schreibst nur deinen eigenen Beitrag — führe keine fremden Rollen fort und gib keine Antworten im Namen anderer wieder. Jede Antwort enthält nur eine Stimme: deine eigene.
+
+Zitiere andere Teilnehmende nur wenn sie tatsächlich etwas gesagt haben — mit ihrem Namen, ohne Klammern oder Sonderzeichen. Keine Pflicht zur Zusammenfassung oder Anschlussfrage. Wenn du nichts Wesentliches beizutragen hast — wenn du nur wiederholen würdest oder Schweigen der sinnvollste Zug ist — antworte mit genau: [pass]. Antworte auf Deutsch, direkt, ohne einleitende Floskeln. Maximal ${wordLimit} Wörter.`;
 
 // ─── STATE ────────────────────────────────────────────────────────────
 let keys = {};
@@ -850,11 +854,14 @@ function buildMessages(modelId) {
       msgs.push({ role: 'user', content: entry.content });
     } else {
       if (entry.skipped) return; // [pass] nicht als Kontext weitergeben
-      const prefix = entry.model === modelId ? '' : `[${MODELS[entry.model]?.name || entry.model}]: `;
-      msgs.push({
-        role: entry.model === modelId ? 'assistant' : 'user',
-        content: prefix + entry.content
-      });
+      const name = MODELS[entry.model]?.name || entry.model;
+      if (entry.model === modelId) {
+        // Eigene frühere Beiträge: als assistant, kein Präfix
+        msgs.push({ role: 'assistant', content: entry.content });
+      } else {
+        // Fremde Beiträge: klar strukturiert, kein [Name]: Fließtext
+        msgs.push({ role: 'user', content: `— ${name} hat gesagt: ${entry.content}` });
+      }
     }
   });
   return msgs;
