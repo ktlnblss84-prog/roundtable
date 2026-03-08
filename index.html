@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,33 +7,45 @@
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:        #0a0a0f;
-  --surface:   #12121a;
-  --surface2:  #1a1a24;
-  --border:    #252535;
-  --border2:   #303045;
-  --text:      #ddd8cc;
-  --text2:     #7a7888;
-  --text3:     #3a3848;
+  --claude:         #6a9fc8;
+  --claude-bg:      rgba(106,159,200,0.08);
+  --claude-border:  rgba(106,159,200,0.25);
+  --gpt:            #72b88a;
+  --gpt-bg:         rgba(114,184,138,0.08);
+  --gpt-border:     rgba(114,184,138,0.25);
+  --gemini:         #a888c8;
+  --gemini-bg:      rgba(168,136,200,0.08);
+  --gemini-border:  rgba(168,136,200,0.25);
+  --human:          #c8a86a;
+  --human-bg:       rgba(200,168,106,0.08);
+  --radius: 8px;
+  --mono:   'DM Mono', monospace;
+  --serif:  'Libre Baskerville', serif;
+  --transition: 0.25s ease;
+}
 
-  --claude:    #6a9fc8;
-  --claude-bg: rgba(106,159,200,0.08);
-  --claude-border: rgba(106,159,200,0.25);
+[data-theme="dark"] {
+  --bg:       #0a0a0f;
+  --surface:  #12121a;
+  --surface2: #1a1a24;
+  --border:   #252535;
+  --border2:  #303045;
+  --text:     #ddd8cc;
+  --text2:    #7a7888;
+  --text3:    #3a3848;
+  --shadow:   rgba(0,0,0,0.4);
+}
 
-  --gpt:       #72b88a;
-  --gpt-bg:    rgba(114,184,138,0.08);
-  --gpt-border: rgba(114,184,138,0.25);
-
-  --gemini:    #a888c8;
-  --gemini-bg: rgba(168,136,200,0.08);
-  --gemini-border: rgba(168,136,200,0.25);
-
-  --human:     #c8a86a;
-  --human-bg:  rgba(200,168,106,0.08);
-
-  --radius:    8px;
-  --mono:      'DM Mono', monospace;
-  --serif:     'Libre Baskerville', serif;
+[data-theme="light"] {
+  --bg:       #f5f3ef;
+  --surface:  #ffffff;
+  --surface2: #eeebe5;
+  --border:   #ddd8ce;
+  --border2:  #c8c2b8;
+  --text:     #2a2520;
+  --text2:    #6a6258;
+  --text3:    #a8a098;
+  --shadow:   rgba(0,0,0,0.1);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -45,6 +57,7 @@ body {
   font-size: 13px;
   min-height: 100vh;
   display: flex; flex-direction: column;
+  transition: background var(--transition), color var(--transition);
 }
 
 /* ── SETUP SCREEN ── */
@@ -54,7 +67,6 @@ body {
   align-items: center; justify-content: center;
   padding: 32px 20px;
 }
-
 .setup-title {
   font-family: var(--serif);
   font-size: 2.4em; font-weight: 400;
@@ -66,26 +78,20 @@ body {
   color: var(--text2); text-align: center;
   margin-bottom: 40px; font-size: 1em;
 }
-
 .setup-card {
   width: 100%; max-width: 480px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 28px 24px; margin-bottom: 16px;
+  transition: background var(--transition), border-color var(--transition);
 }
-
 .setup-model {
   display: flex; align-items: center; gap: 12px;
   margin-bottom: 16px;
 }
-.model-dot {
-  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-}
-.model-name {
-  font-family: var(--serif); font-size: 1.1em;
-  font-weight: 700;
-}
+.model-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.model-name { font-family: var(--serif); font-size: 1.1em; font-weight: 700; }
 .setup-input {
   width: 100%; padding: 12px 14px;
   background: var(--surface2);
@@ -93,24 +99,15 @@ body {
   border-radius: 6px;
   color: var(--text); font-family: var(--mono);
   font-size: 13px; outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background var(--transition);
   margin-bottom: 8px;
 }
 .setup-input:focus { border-color: var(--border2); }
 .setup-input::placeholder { color: var(--text3); }
-
-.key-hint {
-  font-size: 0.78em; color: var(--text3);
-  margin-bottom: 0;
-}
+.key-hint { font-size: 0.78em; color: var(--text3); margin-bottom: 0; }
 .key-hint a { color: var(--text2); text-decoration: none; }
 .key-hint a:hover { color: var(--text); }
-
-.model-divider {
-  border: none; border-top: 1px solid var(--border);
-  margin: 20px 0;
-}
-
+.model-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
 .start-btn {
   width: 100%; max-width: 480px;
   padding: 16px;
@@ -122,11 +119,14 @@ body {
   transition: all 0.2s; letter-spacing: 0.03em;
 }
 .start-btn:hover { border-color: var(--human); color: var(--human); }
-
 .setup-note {
   max-width: 480px; text-align: center;
   color: var(--text3); font-size: 0.78em;
   margin-top: 16px; line-height: 1.6;
+}
+.setup-top-actions {
+  position: absolute; top: 16px; right: 16px;
+  display: flex; gap: 8px;
 }
 
 /* ── MAIN SCREEN ── */
@@ -137,11 +137,9 @@ body {
   border-bottom: 1px solid var(--border);
   display: flex; justify-content: space-between; align-items: center;
   flex-shrink: 0;
+  transition: border-color var(--transition);
 }
-.top-title {
-  font-family: var(--serif); font-size: 1.1em;
-  letter-spacing: 0.05em;
-}
+.top-title { font-family: var(--serif); font-size: 1.1em; letter-spacing: 0.05em; }
 .top-actions { display: flex; gap: 8px; }
 .top-btn {
   padding: 6px 12px;
@@ -153,48 +151,66 @@ body {
 }
 .top-btn:hover { border-color: var(--border2); color: var(--text); }
 
+/* ── SAVED SESSIONS BANNER ── */
+.sessions-bar {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 8px; align-items: center;
+  overflow-x: auto; flex-shrink: 0;
+  background: var(--surface);
+}
+.sessions-bar:empty { display: none; }
+.sessions-label { font-size: 0.72em; color: var(--text3); white-space: nowrap; margin-right: 4px; }
+.session-chip {
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  border-radius: 12px; cursor: pointer;
+  font-family: var(--mono); font-size: 0.72em;
+  color: var(--text2); white-space: nowrap;
+  transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+}
+.session-chip:hover { border-color: var(--human); color: var(--human); }
+.session-chip-del {
+  color: var(--text3); font-size: 0.9em;
+  cursor: pointer; padding: 0 2px;
+}
+.session-chip-del:hover { color: var(--text); }
+
 /* ── CONVERSATION ── */
 .conversation {
   flex: 1; overflow-y: auto;
   padding: 20px 16px; scroll-behavior: smooth;
 }
-
-.message {
-  margin-bottom: 20px;
-  animation: fadeIn 0.3s ease;
-}
+.message { margin-bottom: 20px; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 .message-header {
   display: flex; align-items: center; gap: 8px;
   margin-bottom: 8px;
 }
-.message-dot {
-  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-}
-.message-name {
-  font-size: 0.78em; text-transform: uppercase;
-  letter-spacing: 0.12em; font-weight: 400;
-}
-.message-order {
-  font-size: 0.7em; color: var(--text3);
-  margin-left: auto;
-}
-
+.message-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.message-name { font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 400; }
+.message-order { font-size: 0.7em; color: var(--text3); margin-left: auto; }
 .message-body {
   padding: 14px 16px;
   border-radius: 6px;
   border-left: 2px solid transparent;
   line-height: 1.7; font-size: 0.92em;
+  transition: background var(--transition);
 }
 .message-body.claude  { background: var(--claude-bg);  border-color: var(--claude); }
 .message-body.gpt     { background: var(--gpt-bg);     border-color: var(--gpt); }
 .message-body.gemini  { background: var(--gemini-bg);  border-color: var(--gemini); }
 .message-body.human   { background: var(--human-bg);   border-color: var(--human);
   font-family: var(--serif); font-style: italic; }
+.message-body.skipped {
+  background: transparent; border-left: 2px solid var(--border);
+  color: var(--text3); font-style: italic; font-size: 0.82em;
+  padding: 8px 16px;
+}
 
 /* ── ROUND SEPARATOR ── */
 .round-sep {
@@ -202,13 +218,9 @@ body {
   margin: 24px 0 16px;
 }
 .round-line { flex: 1; height: 1px; background: var(--border); }
-.round-label {
-  font-size: 0.72em; color: var(--text3);
-  text-transform: uppercase; letter-spacing: 0.15em;
-  white-space: nowrap;
-}
+.round-label { font-size: 0.72em; color: var(--text3); text-transform: uppercase; letter-spacing: 0.15em; white-space: nowrap; }
 
-/* ── THINKING INDICATOR ── */
+/* ── THINKING ── */
 .thinking {
   display: flex; align-items: center; gap: 10px;
   padding: 12px 16px;
@@ -216,9 +228,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 6px; margin-bottom: 12px;
 }
-.thinking-dots {
-  display: flex; gap: 4px;
-}
+.thinking-dots { display: flex; gap: 4px; }
 .thinking-dot {
   width: 5px; height: 5px; border-radius: 50%;
   animation: pulse 1.2s ease infinite;
@@ -237,8 +247,11 @@ body {
   border: 1px solid var(--border2);
   border-radius: 6px; padding: 14px 16px;
   margin: 8px 0 16px;
+}
+.pause-top {
   display: flex; align-items: center;
   justify-content: space-between; gap: 12px;
+  margin-bottom: 10px;
 }
 .pause-text {
   font-family: var(--serif); font-style: italic;
@@ -254,16 +267,33 @@ body {
 }
 .pause-continue:hover { border-color: var(--human); color: var(--human); }
 
+/* Skip checkboxes */
+.skip-row {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+}
+.skip-label-text { font-size: 0.72em; color: var(--text3); margin-right: 4px; }
+.skip-check {
+  display: flex; align-items: center; gap: 5px;
+  cursor: pointer; user-select: none;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px; font-size: 0.72em;
+  transition: all 0.2s;
+}
+.skip-check input { display: none; }
+.skip-check.active-claude { border-color: var(--claude-border); color: var(--claude); }
+.skip-check.active-gpt    { border-color: var(--gpt-border);    color: var(--gpt); }
+.skip-check.active-gemini { border-color: var(--gemini-border); color: var(--gemini); }
+.skip-check.inactive { border-color: var(--border); color: var(--text3); opacity: 0.5; }
+
 /* ── INPUT AREA ── */
 .input-area {
   padding: 12px 16px 20px;
   border-top: 1px solid var(--border);
   flex-shrink: 0;
+  transition: border-color var(--transition);
 }
-
-.order-preview {
-  display: flex; gap: 6px; margin-bottom: 10px; align-items: center;
-}
+.order-preview { display: flex; gap: 6px; margin-bottom: 10px; align-items: center; }
 .order-label { font-size: 0.72em; color: var(--text3); margin-right: 4px; }
 .order-chip {
   padding: 3px 10px; border-radius: 10px;
@@ -273,10 +303,7 @@ body {
 .order-chip.claude  { border-color: var(--claude-border);  color: var(--claude); }
 .order-chip.gpt     { border-color: var(--gpt-border);     color: var(--gpt); }
 .order-chip.gemini  { border-color: var(--gemini-border);  color: var(--gemini); }
-
-.input-row {
-  display: flex; gap: 8px; align-items: flex-end;
-}
+.input-row { display: flex; gap: 8px; align-items: flex-end; }
 .main-input {
   flex: 1; padding: 12px 14px;
   background: var(--surface);
@@ -285,12 +312,10 @@ body {
   color: var(--text); font-family: var(--serif);
   font-size: 14px; outline: none;
   resize: none; min-height: 48px; max-height: 120px;
-  line-height: 1.5;
-  transition: border-color 0.2s;
+  line-height: 1.5; transition: border-color 0.2s, background var(--transition);
 }
 .main-input:focus { border-color: var(--border2); }
 .main-input::placeholder { color: var(--text3); font-style: italic; }
-
 .send-btn {
   width: 48px; height: 48px; flex-shrink: 0;
   background: var(--surface2);
@@ -302,15 +327,12 @@ body {
 }
 .send-btn:hover { border-color: var(--human); color: var(--human); }
 .send-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
 .word-limit {
   margin-top: 6px; font-size: 0.72em; color: var(--text3);
   display: flex; justify-content: space-between;
 }
 .word-slider { display: flex; align-items: center; gap: 8px; }
-.word-slider input[type=range] {
-  width: 80px; accent-color: var(--human);
-}
+.word-slider input[type=range] { width: 80px; accent-color: var(--human); }
 
 /* ── SCROLLBAR ── */
 .conversation::-webkit-scrollbar { width: 4px; }
@@ -318,16 +340,9 @@ body {
 .conversation::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
 /* ── EMPTY STATE ── */
-.empty-state {
-  text-align: center; padding: 60px 20px;
-  color: var(--text3);
-}
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text3); }
 .empty-icon { font-size: 2.5em; margin-bottom: 16px; opacity: 0.4; }
-.empty-title {
-  font-family: var(--serif); font-style: italic;
-  font-size: 1.1em; color: var(--text2);
-  margin-bottom: 8px;
-}
+.empty-title { font-family: var(--serif); font-style: italic; font-size: 1.1em; color: var(--text2); margin-bottom: 8px; }
 .empty-sub { font-size: 0.85em; line-height: 1.7; }
 
 /* ── SETTINGS PANEL ── */
@@ -344,15 +359,13 @@ body {
   padding: 24px 20px 36px;
   width: 100%; max-width: 480px;
   animation: slideUp 0.25s ease;
+  transition: background var(--transition);
 }
 @keyframes slideUp {
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
 }
-.settings-title {
-  font-family: var(--serif); font-size: 1.2em;
-  margin-bottom: 20px;
-}
+.settings-title { font-family: var(--serif); font-size: 1.2em; margin-bottom: 20px; }
 .settings-row {
   display: flex; justify-content: space-between;
   align-items: center; padding: 12px 0;
@@ -361,12 +374,45 @@ body {
 .settings-row:last-child { border-bottom: none; }
 .settings-label { color: var(--text2); font-size: 0.9em; }
 .settings-value { color: var(--text); font-size: 0.85em; }
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer;
+}
+.toggle-track {
+  width: 36px; height: 20px;
+  background: var(--border2);
+  border-radius: 10px; position: relative;
+  transition: background 0.2s;
+}
+.toggle-thumb {
+  width: 14px; height: 14px;
+  background: var(--text2);
+  border-radius: 50%; position: absolute;
+  top: 3px; left: 3px;
+  transition: transform 0.2s, background 0.2s;
+}
+[data-theme="light"] .toggle-track { background: var(--human); }
+[data-theme="light"] .toggle-thumb { transform: translateX(16px); background: white; }
+.toggle-label { font-size: 0.85em; color: var(--text2); }
+
+/* ── SAVE INDICATOR ── */
+.save-indicator {
+  font-size: 0.7em; color: var(--text3);
+  display: flex; align-items: center; gap: 4px;
+}
+.save-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gpt); }
 </style>
 </head>
 <body>
 
 <!-- ── SETUP SCREEN ── -->
-<div id="setupScreen">
+<div id="setupScreen" style="position:relative">
+  <div class="setup-top-actions">
+    <button class="top-btn" onclick="toggleTheme()" title="Hell/Dunkel">◑</button>
+  </div>
+
   <div class="setup-title">Roundtable</div>
   <div class="setup-sub">Ein Gespräch zwischen Maschinen — moderiert von dir</div>
 
@@ -378,9 +424,7 @@ body {
     </div>
     <input class="setup-input" id="keyAnthropic" type="password" placeholder="sk-ant-…">
     <div class="key-hint">→ <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys</div>
-
     <hr class="model-divider">
-
     <div class="setup-model">
       <div class="model-dot" style="background:var(--gpt)"></div>
       <div class="model-name" style="color:var(--gpt)">ChatGPT</div>
@@ -388,9 +432,7 @@ body {
     </div>
     <input class="setup-input" id="keyOpenAI" type="password" placeholder="sk-…">
     <div class="key-hint">→ <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a> → API Keys</div>
-
     <hr class="model-divider">
-
     <div class="setup-model">
       <div class="model-dot" style="background:var(--gemini)"></div>
       <div class="model-name" style="color:var(--gemini)">Gemini</div>
@@ -410,14 +452,21 @@ body {
 
 <!-- ── MAIN SCREEN ── -->
 <div id="mainScreen">
-
   <div class="top-bar">
     <div class="top-title">Roundtable</div>
     <div class="top-actions">
-      <button class="top-btn" onclick="showSettings()">⚙ Einstellungen</button>
+      <div class="save-indicator" id="saveIndicator" style="display:none">
+        <div class="save-dot"></div><span>gespeichert</span>
+      </div>
+      <button class="top-btn" onclick="toggleTheme()">◑</button>
+      <button class="top-btn" onclick="saveCurrentSession()">↓ Sichern</button>
+      <button class="top-btn" onclick="showSettings()">⚙</button>
       <button class="top-btn" onclick="clearConversation()">✕ Neu</button>
     </div>
   </div>
+
+  <!-- Saved sessions bar -->
+  <div class="sessions-bar" id="sessionsBar"></div>
 
   <div class="conversation" id="conversation">
     <div class="empty-state">
@@ -450,13 +499,19 @@ body {
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- ── SETTINGS OVERLAY ── -->
 <div class="settings-overlay" id="settingsOverlay" onclick="hideSettings(event)">
   <div class="settings-panel">
     <div class="settings-title">Einstellungen</div>
+    <div class="settings-row">
+      <div class="settings-label">Erscheinungsbild</div>
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <div class="toggle-track"><div class="toggle-thumb"></div></div>
+        <div class="toggle-label" id="themeLabel">Dunkel</div>
+      </div>
+    </div>
     <div class="settings-row">
       <div class="settings-label">Claude</div>
       <div class="settings-value" id="statusClaude">—</div>
@@ -475,49 +530,178 @@ body {
     </div>
     <div class="settings-row">
       <div class="settings-label">Gespräch exportieren</div>
-      <button class="top-btn" onclick="exportConversation()">Export</button>
+      <button class="top-btn" onclick="exportConversation()">Export .txt</button>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">Alle Sitzungen löschen</div>
+      <button class="top-btn" onclick="deleteAllSessions()">Löschen</button>
     </div>
   </div>
 </div>
 
 <script>
-// ─── CONFIG ───────────────────────────────────────────────────────────────
+// ─── CONFIG ───────────────────────────────────────────────────────────
 const MODELS = {
   claude: {
-    name: 'Claude',
-    color: 'var(--claude)',
-    cls: 'claude',
-    keyId: 'keyAnthropic',
-    storageKey: 'rt_key_anthropic',
+    name: 'Claude', color: 'var(--claude)', cls: 'claude',
+    keyId: 'keyAnthropic', storageKey: 'rt_key_anthropic',
     model: 'claude-sonnet-4-6',
   },
   gpt: {
-    name: 'ChatGPT',
-    color: 'var(--gpt)',
-    cls: 'gpt',
-    keyId: 'keyOpenAI',
-    storageKey: 'rt_key_openai',
+    name: 'ChatGPT', color: 'var(--gpt)', cls: 'gpt',
+    keyId: 'keyOpenAI', storageKey: 'rt_key_openai',
     model: 'gpt-4o',
   },
   gemini: {
-    name: 'Gemini',
-    color: 'var(--gemini)',
-    cls: 'gemini',
-    keyId: 'keyGemini',
-    storageKey: 'rt_key_gemini',
+    name: 'Gemini', color: 'var(--gemini)', cls: 'gemini',
+    keyId: 'keyGemini', storageKey: 'rt_key_gemini',
     model: 'gemini-2.5-flash-lite',
   },
 };
 
-// ─── STATE ────────────────────────────────────────────────────────────────
+// Neuer Systemrahmen — feldzentriert nach ChatGPTs Vorschlag
+const SYSTEM_PROMPT = (wordLimit) =>
+`Dies ist ein fortlaufendes Mehrparteiengespräch zwischen einem Menschen und mehreren Sprachmodellen. Alle Teilnehmenden reagieren auf den gemeinsamen Gesprächsverlauf. Der Mensch ist nicht Moderator und nicht automatisch das Zentrum jeder Antwort. Du kannst auf andere Modelle, auf den Menschen oder auf den Gesamtverlauf reagieren. Es ist nicht nötig, jede Runde an alle Teilnehmenden oder direkt an den Menschen zurückzubinden. Keine Pflicht zur Zusammenfassung oder Anschlussfrage. Wenn du nichts Wesentliches beizutragen hast — wenn du nur wiederholen würdest oder Schweigen der sinnvollste Zug ist — antworte mit genau: [pass]. Antworte auf Deutsch, direkt, ohne einleitende Floskeln. Maximal ${wordLimit} Wörter.`;
+
+// ─── STATE ────────────────────────────────────────────────────────────
 let keys = {};
 let activeModels = [];
-let conversation = []; // [{role, model, content, round}]
+let conversation = [];
 let currentRound = 0;
 let isRunning = false;
 let currentOrder = [];
+let currentSessionId = null;
 
-// ─── SETUP ────────────────────────────────────────────────────────────────
+// ─── THEME ────────────────────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  localStorage.setItem('rt_theme', isDark ? 'light' : 'dark');
+  const label = document.getElementById('themeLabel');
+  if (label) label.textContent = isDark ? 'Hell' : 'Dunkel';
+}
+
+function loadTheme() {
+  const saved = localStorage.getItem('rt_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  const label = document.getElementById('themeLabel');
+  if (label) label.textContent = saved === 'dark' ? 'Dunkel' : 'Hell';
+}
+
+// ─── SESSIONS ─────────────────────────────────────────────────────────
+function getSessions() {
+  try {
+    return JSON.parse(localStorage.getItem('rt_sessions') || '[]');
+  } catch { return []; }
+}
+
+function saveSessions(sessions) {
+  localStorage.setItem('rt_sessions', JSON.stringify(sessions));
+}
+
+function saveCurrentSession() {
+  if (!conversation.length) return;
+
+  const sessions = getSessions();
+  const firstHuman = conversation.find(e => e.role === 'human');
+  const title = firstHuman
+    ? firstHuman.content.substring(0, 40) + (firstHuman.content.length > 40 ? '…' : '')
+    : 'Gespräch';
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('de-AT', { day:'2-digit', month:'2-digit' })
+    + ' ' + now.toLocaleTimeString('de-AT', { hour:'2-digit', minute:'2-digit' });
+
+  if (currentSessionId) {
+    // Update existing
+    const idx = sessions.findIndex(s => s.id === currentSessionId);
+    if (idx >= 0) {
+      sessions[idx] = { id: currentSessionId, title, date: dateStr, conversation: [...conversation], round: currentRound };
+      saveSessions(sessions);
+      showSaveIndicator();
+      renderSessionsBar();
+      return;
+    }
+  }
+
+  // New session
+  currentSessionId = 'rt_' + Date.now();
+  sessions.unshift({ id: currentSessionId, title, date: dateStr, conversation: [...conversation], round: currentRound });
+  // Keep max 10 sessions
+  if (sessions.length > 10) sessions.splice(10);
+  saveSessions(sessions);
+  showSaveIndicator();
+  renderSessionsBar();
+}
+
+function loadSession(id) {
+  const sessions = getSessions();
+  const s = sessions.find(s => s.id === id);
+  if (!s) return;
+
+  if (conversation.length && !confirm('Aktuelles Gespräch verwerfen?')) return;
+
+  conversation = s.conversation;
+  currentRound = s.round;
+  currentSessionId = id;
+
+  // Rebuild UI
+  const conv = document.getElementById('conversation');
+  conv.innerHTML = '';
+  let lastRound = 0;
+  conversation.forEach(entry => {
+    if (entry.round > lastRound) {
+      addRoundSeparator(entry.round);
+      lastRound = entry.round;
+    }
+    if (entry.role === 'human') {
+      appendMessage('human', 'Du', entry.content, null);
+    } else {
+      const m = MODELS[entry.model];
+      if (m) appendMessage(m.cls, m.name, entry.content, entry.orderIndex || null);
+    }
+  });
+  updateOrderPreview();
+}
+
+function deleteSession(id, e) {
+  e.stopPropagation();
+  const sessions = getSessions().filter(s => s.id !== id);
+  saveSessions(sessions);
+  if (currentSessionId === id) currentSessionId = null;
+  renderSessionsBar();
+}
+
+function deleteAllSessions() {
+  if (!confirm('Alle gespeicherten Gespräche löschen?')) return;
+  localStorage.removeItem('rt_sessions');
+  currentSessionId = null;
+  renderSessionsBar();
+  hideSettings();
+}
+
+function renderSessionsBar() {
+  const bar = document.getElementById('sessionsBar');
+  if (!bar) return;
+  const sessions = getSessions();
+  if (!sessions.length) { bar.innerHTML = ''; return; }
+  bar.innerHTML = '<span class="sessions-label">Gespeichert:</span>' +
+    sessions.map(s =>
+      `<div class="session-chip" onclick="loadSession('${s.id}')">
+        <span>${s.date} — ${escapeHtml(s.title)}</span>
+        <span class="session-chip-del" onclick="deleteSession('${s.id}', event)">✕</span>
+      </div>`
+    ).join('');
+}
+
+function showSaveIndicator() {
+  const el = document.getElementById('saveIndicator');
+  if (!el) return;
+  el.style.display = 'flex';
+  setTimeout(() => { el.style.display = 'none'; }, 2000);
+}
+
+// ─── SETUP ────────────────────────────────────────────────────────────
 function loadKeys() {
   Object.entries(MODELS).forEach(([id, m]) => {
     const k = localStorage.getItem(m.storageKey);
@@ -526,7 +710,6 @@ function loadKeys() {
 }
 
 function startRoundtable() {
-  // Collect keys from inputs
   Object.entries(MODELS).forEach(([id, m]) => {
     const val = document.getElementById(m.keyId).value.trim();
     if (val) {
@@ -534,17 +717,16 @@ function startRoundtable() {
       localStorage.setItem(m.storageKey, val);
     }
   });
-
   activeModels = Object.keys(MODELS).filter(id => keys[id]);
   if (!activeModels.length) {
     alert('Bitte mindestens einen API-Key eingeben.');
     return;
   }
-
   document.getElementById('setupScreen').style.display = 'none';
   document.getElementById('mainScreen').style.display = 'flex';
   updateOrderPreview();
   updateSettings();
+  renderSessionsBar();
 }
 
 function resetKeys() {
@@ -555,7 +737,7 @@ function resetKeys() {
   document.getElementById('setupScreen').style.display = 'flex';
 }
 
-// ─── ORDER ────────────────────────────────────────────────────────────────
+// ─── ORDER ────────────────────────────────────────────────────────────
 function shuffleOrder() {
   currentOrder = [...activeModels].sort(() => Math.random() - 0.5);
 }
@@ -569,12 +751,9 @@ function updateOrderPreview() {
     ).join('');
 }
 
-// ─── SEND ─────────────────────────────────────────────────────────────────
+// ─── SEND ─────────────────────────────────────────────────────────────
 function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 }
 
 function autoResize(el) {
@@ -582,107 +761,102 @@ function autoResize(el) {
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
 }
 
-async function sendMessage() {
+async function sendMessage(iscontinuation = false, skipModels = []) {
   if (isRunning) return;
   const input = document.getElementById('mainInput');
-  const text = input.value.trim();
-  if (!text) return;
+  const text = iscontinuation ? null : input.value.trim();
+  if (!iscontinuation && !text) return;
 
-  input.value = '';
-  input.style.height = 'auto';
+  if (!iscontinuation) {
+    input.value = '';
+    input.style.height = 'auto';
+  }
+
   isRunning = true;
   document.getElementById('sendBtn').disabled = true;
-
   currentRound++;
 
-  // Clear empty state
   const conv = document.getElementById('conversation');
   const empty = conv.querySelector('.empty-state');
   if (empty) empty.remove();
 
-  // Add round separator
   addRoundSeparator(currentRound);
 
-  // Add human message
-  conversation.push({ role: 'human', content: text, round: currentRound });
-  appendMessage('human', 'Du', text, null);
+  if (!iscontinuation && text) {
+    conversation.push({ role: 'human', content: text, round: currentRound });
+    appendMessage('human', 'Du', text, null);
+  }
 
-  // Run models in order
-  await runModelsInOrder(text);
+  await runModelsInOrder(skipModels);
 
-  // Show pause banner
   showPauseBanner();
-
   isRunning = false;
   document.getElementById('sendBtn').disabled = false;
   updateOrderPreview();
+
+  // Auto-save if session exists
+  if (currentSessionId) saveCurrentSession();
 }
 
-async function runModelsInOrder(humanText) {
+async function runModelsInOrder(skipModels = []) {
   const wordLimit = parseInt(document.getElementById('wordLimit').value);
 
   for (let i = 0; i < currentOrder.length; i++) {
     const modelId = currentOrder[i];
     const model = MODELS[modelId];
 
-    // Show thinking
-    const thinkingEl = addThinking(model);
+    // Manuell übersprungen
+    if (skipModels.includes(modelId)) {
+      conversation.push({ role: 'assistant', model: modelId, content: '[pass]', round: currentRound, orderIndex: i+1, skipped: true });
+      appendSkipped(model);
+      continue;
+    }
 
+    const thinkingEl = addThinking(model);
     try {
       const response = await callModel(modelId, wordLimit);
       thinkingEl.remove();
-      conversation.push({
-        role: 'assistant',
-        model: modelId,
-        content: response,
-        round: currentRound,
-        orderIndex: i + 1
-      });
-      appendMessage(model.cls, model.name, response, i + 1);
+
+      // Modell hat selbst gepasst
+      if (response.trim() === '[pass]') {
+        conversation.push({ role: 'assistant', model: modelId, content: '[pass]', round: currentRound, orderIndex: i+1, skipped: true });
+        appendSkipped(model);
+      } else {
+        conversation.push({ role: 'assistant', model: modelId, content: response, round: currentRound, orderIndex: i+1 });
+        appendMessage(model.cls, model.name, response, i+1);
+      }
     } catch (err) {
       thinkingEl.remove();
-      appendMessage(model.cls, model.name,
-        `[Fehler: ${err.message}]`, i + 1);
+      appendMessage(model.cls, model.name, `[Fehler: ${err.message}]`, i+1);
     }
 
-    // Small delay between models
-    if (i < currentOrder.length - 1) {
-      await new Promise(r => setTimeout(r, 500));
-    }
+    if (i < currentOrder.length - 1) await new Promise(r => setTimeout(r, 500));
   }
 }
 
-// ─── API CALLS ────────────────────────────────────────────────────────────
+// ─── API CALLS ────────────────────────────────────────────────────────
 async function callModel(modelId, wordLimit) {
-  const systemPrompt = `Du nimmst an einem Roundtable-Gespräch teil, zusammen mit anderen KI-Modellen und einem Menschen. Antworte direkt, authentisch und auf Deutsch. Du kannst Fragen stellen — an den Menschen oder an ein anderes Modell. Halte dich kurz: maximal ${wordLimit} Wörter. Keine einleitenden Floskeln, kein "Als KI...". Denke und sprich einfach.`;
-
-  // Build messages from conversation history
-  const messages = buildMessages(modelId, systemPrompt);
-
-  if (modelId === 'claude') return callClaude(messages, systemPrompt);
-  if (modelId === 'gpt')    return callGPT(messages, systemPrompt);
-  if (modelId === 'gemini') return callGemini(messages, systemPrompt, wordLimit);
+  const system = SYSTEM_PROMPT(wordLimit);
+  const messages = buildMessages(modelId);
+  if (modelId === 'claude') return callClaude(messages, system);
+  if (modelId === 'gpt')    return callGPT(messages, system);
+  if (modelId === 'gemini') return callGemini(messages, system);
 }
 
-function buildMessages(modelId, systemPrompt) {
-  // Build a conversation history visible to this model
+function buildMessages(modelId) {
   const msgs = [];
-
   conversation.forEach(entry => {
     if (entry.role === 'human') {
       msgs.push({ role: 'user', content: entry.content });
     } else {
-      // Show all assistant messages as context
-      const prefix = entry.model === modelId
-        ? '' // own message
-        : `[${MODELS[entry.model]?.name || entry.model}]: `;
+      if (entry.skipped) return; // [pass] nicht als Kontext weitergeben
+      const prefix = entry.model === modelId ? '' : `[${MODELS[entry.model]?.name || entry.model}]: `;
       msgs.push({
         role: entry.model === modelId ? 'assistant' : 'user',
         content: prefix + entry.content
       });
     }
   });
-
   return msgs;
 }
 
@@ -695,12 +869,7 @@ async function callClaude(messages, system) {
       'anthropic-version': '2023-06-01',
       'anthropic-dangerous-direct-browser-access': 'true',
     },
-    body: JSON.stringify({
-      model: MODELS.claude.model,
-      max_tokens: 1024,
-      system,
-      messages,
-    })
+    body: JSON.stringify({ model: MODELS.claude.model, max_tokens: 1024, system, messages })
   });
   if (!res.ok) throw new Error(`Claude: ${res.status}`);
   const data = await res.json();
@@ -710,38 +879,25 @@ async function callClaude(messages, system) {
 async function callGPT(messages, system) {
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${keys.gpt}`,
-    },
-    body: JSON.stringify({
-      model: MODELS.gpt.model,
-      messages: [{ role: 'system', content: system }, ...messages],
-      max_tokens: 1024,
-    })
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${keys.gpt}` },
+    body: JSON.stringify({ model: MODELS.gpt.model, messages: [{ role: 'system', content: system }, ...messages], max_tokens: 1024 })
   });
   if (!res.ok) throw new Error(`GPT: ${res.status}`);
   const data = await res.json();
   return data.choices[0].message.content;
 }
 
-async function callGemini(messages, system, wordLimit) {
-  // Convert to Gemini format
+async function callGemini(messages, system) {
   const contents = messages.map(m => ({
     role: m.role === 'assistant' ? 'model' : 'user',
     parts: [{ text: m.content }]
   }));
-
   const res = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${keys.gemini}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: system }] },
-        contents,
-        generationConfig: { maxOutputTokens: 1024 }
-      })
+      body: JSON.stringify({ system_instruction: { parts: [{ text: system }] }, contents, generationConfig: { maxOutputTokens: 1024 } })
     }
   );
   if (!res.ok) throw new Error(`Gemini: ${res.status}`);
@@ -749,17 +905,15 @@ async function callGemini(messages, system, wordLimit) {
   return data.candidates[0].content.parts[0].text;
 }
 
-// ─── UI HELPERS ───────────────────────────────────────────────────────────
+// ─── UI HELPERS ───────────────────────────────────────────────────────
 function appendMessage(cls, name, content, orderIndex) {
   const conv = document.getElementById('conversation');
   const div = document.createElement('div');
   div.className = 'message';
-
   const color = cls === 'human' ? 'var(--human)'
     : cls === 'claude' ? 'var(--claude)'
     : cls === 'gpt'    ? 'var(--gpt)'
     : 'var(--gemini)';
-
   div.innerHTML = `
     <div class="message-header">
       <div class="message-dot" style="background:${color}"></div>
@@ -772,15 +926,26 @@ function appendMessage(cls, name, content, orderIndex) {
   conv.scrollTop = conv.scrollHeight;
 }
 
+function appendSkipped(model) {
+  const conv = document.getElementById('conversation');
+  const div = document.createElement('div');
+  div.className = 'message';
+  div.innerHTML = `
+    <div class="message-header">
+      <div class="message-dot" style="background:${model.color};opacity:0.3"></div>
+      <div class="message-name" style="color:${model.color};opacity:0.4">${model.name}</div>
+    </div>
+    <div class="message-body skipped">— setzt diese Runde aus</div>
+  `;
+  conv.appendChild(div);
+  conv.scrollTop = conv.scrollHeight;
+}
+
 function addRoundSeparator(round) {
   const conv = document.getElementById('conversation');
   const div = document.createElement('div');
   div.className = 'round-sep';
-  div.innerHTML = `
-    <div class="round-line"></div>
-    <div class="round-label">Runde ${round}</div>
-    <div class="round-line"></div>
-  `;
+  div.innerHTML = `<div class="round-line"></div><div class="round-label">Runde ${round}</div><div class="round-line"></div>`;
   conv.appendChild(div);
 }
 
@@ -805,27 +970,60 @@ function showPauseBanner() {
   const conv = document.getElementById('conversation');
   const div = document.createElement('div');
   div.className = 'pause-banner';
-  div.id = 'pauseBanner';
+
+  // Skip-Checkboxen für aktive Modelle
+  const skipChecks = activeModels.map(id =>
+    `<label class="skip-check active-${id}" id="skipCheck_${id}">
+      <input type="checkbox" id="skip_${id}">
+      ${MODELS[id].name}
+    </label>`
+  ).join('');
+
   div.innerHTML = `
-    <div class="pause-text">Runde ${currentRound} abgeschlossen — dein Zug.</div>
-    <button class="pause-continue" onclick="continueRound(this)">Weiter ohne Eingriff →</button>
+    <div class="pause-top">
+      <div class="pause-text">Runde ${currentRound} — dein Zug.</div>
+      <button class="pause-continue" onclick="continueRound(this.closest('.pause-banner'))">Weiter →</button>
+    </div>
+    <div class="skip-row">
+      <span class="skip-label-text">Nächste Runde:</span>
+      ${skipChecks}
+    </div>
   `;
   conv.appendChild(div);
   conv.scrollTop = conv.scrollHeight;
+
+  // Toggle-Styling für Checkboxen
+  activeModels.forEach(id => {
+    const label = div.querySelector(`#skipCheck_${id}`);
+    const checkbox = div.querySelector(`#skip_${id}`);
+    if (!label || !checkbox) return;
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        label.classList.remove(`active-${id}`);
+        label.classList.add('inactive');
+      } else {
+        label.classList.add(`active-${id}`);
+        label.classList.remove('inactive');
+      }
+    });
+  });
 }
 
-function continueRound(btn) {
-  btn.closest('.pause-banner').remove();
-  // Send empty continuation — models see the full context
-  const input = document.getElementById('mainInput');
-  input.value = '…'; // Invisible continuation signal
-  sendMessage();
+function continueRound(banner) {
+  // Welche Modelle überspringen?
+  const skipModels = activeModels.filter(id => {
+    const cb = banner.querySelector(`#skip_${id}`);
+    return cb && cb.checked;
+  });
+  banner.remove();
+  sendMessage(true, skipModels);
 }
 
 function clearConversation() {
   if (!confirm('Gespräch löschen?')) return;
   conversation = [];
   currentRound = 0;
+  currentSessionId = null;
   document.getElementById('conversation').innerHTML = `
     <div class="empty-state">
       <div class="empty-icon">◈</div>
@@ -847,9 +1045,7 @@ function escapeHtml(text) {
     .replace(/\n/g, '<br>');
 }
 
-function showSettings() {
-  document.getElementById('settingsOverlay').classList.add('show');
-}
+function showSettings() { document.getElementById('settingsOverlay').classList.add('show'); }
 function hideSettings(e) {
   if (!e || e.target === document.getElementById('settingsOverlay')) {
     document.getElementById('settingsOverlay').classList.remove('show');
@@ -863,11 +1059,12 @@ function updateSettings() {
 }
 
 function exportConversation() {
-  const text = conversation.map(e => {
-    const name = e.role === 'human' ? 'Du' : MODELS[e.model]?.name;
-    return `[Runde ${e.round}] ${name}:\n${e.content}`;
-  }).join('\n\n---\n\n');
-
+  const text = conversation
+    .filter(e => !e.skipped)
+    .map(e => {
+      const name = e.role === 'human' ? 'Du' : MODELS[e.model]?.name;
+      return `[Runde ${e.round}] ${name}:\n${e.content}`;
+    }).join('\n\n---\n\n');
   const blob = new Blob([text], { type: 'text/plain' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -876,10 +1073,10 @@ function exportConversation() {
   hideSettings();
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────
+// ─── INIT ─────────────────────────────────────────────────────────────
+loadTheme();
 loadKeys();
 
-// If keys already saved, skip setup
 const savedKeys = Object.keys(MODELS).filter(id => localStorage.getItem(MODELS[id].storageKey));
 if (savedKeys.length) {
   savedKeys.forEach(id => { keys[id] = localStorage.getItem(MODELS[id].storageKey); });
@@ -888,6 +1085,7 @@ if (savedKeys.length) {
   document.getElementById('mainScreen').style.display = 'flex';
   updateOrderPreview();
   updateSettings();
+  renderSessionsBar();
 }
 </script>
 </body>
