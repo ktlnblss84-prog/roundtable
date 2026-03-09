@@ -497,6 +497,12 @@ body {
           oninput="document.getElementById('wordLimitVal').textContent = this.value">
         <span id="wordLimitVal">150</span>
       </div>
+      <span style="color:var(--text3);margin-left:12px">Kontext (letzte Runden):</span>
+      <div class="word-slider">
+        <input type="range" id="contextLimit" min="3" max="30" value="10" step="1"
+          oninput="document.getElementById('contextLimitVal').textContent = this.value === '30' ? 'alle' : this.value">
+        <span id="contextLimitVal">10</span>
+      </div>
     </div>
   </div>
 </div>
@@ -559,7 +565,7 @@ const MODELS = {
   gemini: {
     name: 'Gemini', color: 'var(--gemini)', cls: 'gemini',
     keyId: 'keyGemini', storageKey: 'rt_key_gemini',
-    model: 'gemini-2.0-flash',
+    model: 'gemini-flash-latest',
   },
 };
 
@@ -994,7 +1000,15 @@ async function callModel(modelId, wordLimit) {
 
 function buildMessages(modelId) {
   const msgs = [];
-  conversation.forEach(entry => {
+
+  // Kontextfenster: letzte N Runden, oder alle wenn Slider auf Maximum (30)
+  const contextSlider = document.getElementById('contextLimit');
+  const contextLimit = contextSlider ? parseInt(contextSlider.value) : 30;
+  const minRound = contextLimit >= 30 ? 0 : Math.max(0, currentRound - contextLimit);
+
+  const filtered = conversation.filter(entry => (entry.round || 0) >= minRound);
+
+  filtered.forEach(entry => {
     if (entry.role === 'human') {
       msgs.push({ role: 'user', content: entry.content });
     } else {
@@ -1009,6 +1023,12 @@ function buildMessages(modelId) {
       }
     }
   });
+
+  // Mindestens eine user-Nachricht sicherstellen
+  if (msgs.length === 0 || msgs[msgs.length - 1].role !== 'user') {
+    msgs.push({ role: 'user', content: '...' });
+  }
+
   return msgs;
 }
 
